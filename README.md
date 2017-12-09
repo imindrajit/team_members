@@ -16,8 +16,10 @@
 15) vim ../env/lib/python2.7/site-packages/django_logging/settings.py. Goto line number **57**. Replace ***from .cursor_wrapper import CursorLogWrapper*** with ***from django_logging.cursor_wrapper import CursorLogWrapper***. Save the file and exit.
 16) python manage.py makemigration
 17) python manage.py migrate
-18) python manage.py runserver 8888. Here 8888 is the port on which django server is running.
-19) For API Documentation refer to wiki section.
+18) for cross verifying migrations, run **python manage.py makemigrations team_app**
+19) if the above output shows new model Member, then run **python manage.py migrate team_app**
+20) python manage.py runserver 8888. Here 8888 is the port on which django server is running.
+21) For API Documentation refer to wiki section.
 
 
 ## Steps to run test cases :-

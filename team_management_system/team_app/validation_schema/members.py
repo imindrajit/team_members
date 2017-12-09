@@ -10,7 +10,7 @@ class MembersValidationSchema:
                 'type': int,
                 'required': False,
                 'model_object': apps.get_model(app_label='team_app', model_name='Member'),
-                'field_name': 'id',
+                'db_field_reference': 'id',
             }
         }
         return schema
@@ -34,6 +34,9 @@ class MembersValidationSchema:
             'email': {
                 'type': str,
                 'required': True,
+                'model_object': apps.get_model(app_label='team_app', model_name='Member'),
+                'unique': True,
+                'unique_db_field': 'email',
             },
             'role': {
                 'type': str,

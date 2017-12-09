@@ -17,7 +17,7 @@ class Member(models.Model):
     first_name = models.CharField(max_length=30, null=False, blank=False)
     last_name = models.CharField(max_length=30, null=False, blank=False)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
-    email = models.CharField(max_length=30, unique=True, null=False, blank=False)
+    email = models.CharField(max_length=30, null=False, blank=False)
     role = models.CharField(max_length=30, choices=MemberRole.choices(), default=MemberRole.REGULAR.value)
     is_active = models.BooleanField(default=True)
     objects = ActiveManager()

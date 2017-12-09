@@ -92,6 +92,7 @@ class ErrorMessages(Enum):
     MAX_LENGTH = 'Max length for {} can be {}.'
     MODEL_OBJECT = 'Invalid {}.'
     RANGE = 'Allowed values for {} are in between {} and {}.'
+    UNIQUE = '{} field is unique. {} already exists.'
 
 
 class Schema(object):
@@ -99,11 +100,13 @@ class Schema(object):
         self.field = key
         self.type = None
         self.required = None
+        self.unique = None
+        self.unique_db_field = None
         self.schema_type = None
         self.allowed = None
         self.max_length = None
         self.model_object = None
-        self.field_name = None
+        self.db_field_reference = None
         self.range = None
 
         for key, value in schema_dict.items():
@@ -154,12 +157,25 @@ class Schema(object):
         if not self.required and not value:
             return True
         if value:
-            if self.model_object and self.field_name:
-                model_obj = self.model_object.objects.filter(**{self.field_name: value})
+            if self.model_object and self.db_field_reference:
+                model_obj = self.model_object.objects.filter(**{self.db_field_reference: value})
                 if model_obj:
                     return True
-                else:
-                    return False
+                return False
+            return False
+        return False
+
+    def _validate_unique_field(self, value):
+        if not self.required and not value:
+            return True
+        if value:
+            if self.model_object and self.unique and self.unique_db_field:
+                model_obj = self.model_object.objects.filter(**{self.unique_db_field: value})
+                if not model_obj:
+                    return True
+                return False
+            return False
+        return False
 
     def _validate_schema_type(self, values):
         validation_status = True
@@ -201,11 +217,17 @@ class Schema(object):
                 error_message += ' '
                 error_message += ErrorMessages.RANGE.value.format(self.field, self.range[0], self.range[1])
                 final_validation_status = final_validation_status and validation_status
-        if self.model_object:
+        if self.model_object and self.db_field_reference:
             validation_status = self._validate_model_object(val)
             if not validation_status:
                 error_message += ' '
                 error_message += ErrorMessages.MODEL_OBJECT.value.format(self.field)
+                final_validation_status = final_validation_status and validation_status
+        if self.model_object and self.unique and self.unique_db_field:
+            validation_status = self._validate_unique_field(val)
+            if not validation_status:
+                error_message += ' '
+                error_message += ErrorMessages.UNIQUE.value.format(self.field, val)
                 final_validation_status = final_validation_status and validation_status
         if self.schema_type:
             validation_status = self._validate_schema_type(val)

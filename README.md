@@ -6,8 +6,8 @@
 5) virtualenv env
 6) source env/bin/activate
 7) pip install -r requirements.pip
-8) setup mysql server in the system with username **root** and password **querty**
-9) log into mysql console via **mysql -uroot -pquerty**
+8) setup mysql server in the system with username **root** and password **qwerty**
+9) log into mysql console via **mysql -uroot -pqwerty**
 10) create database **team_management_system**;
 11) exit mysql console by typing **exit**
 12) cd team_management_system

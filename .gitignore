@@ -1,0 +1,6 @@
+*.DS_Store
+*.pyc
+__pycache__
+env
+logs
+team_management_system/team_app/migrations
